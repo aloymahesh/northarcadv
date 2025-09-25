@@ -826,14 +826,38 @@
         function handleFormSubmit(event) {
             event.preventDefault();
             
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
+            const form = event.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
             
-            // In a real implementation, you would send this to your backend
-            alert('Thank you for your message! I\'ll get back to you within one business day.');
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Sending...';
             
-            // Reset form
-            event.target.reset();
+            const templateParams = {
+                from_name: form.name.value,
+                from_email: form.email.value,
+                company: form.company.value,
+                message: form.message.value,
+                to_name: 'Aloy',
+            };
+        
+            emailjs.send(
+                'service_n9r3h5u', // Replace with your EmailJS service ID
+                'template_j7f0dhm', // Replace with your EmailJS template ID
+                templateParams
+            )
+            .then(function(response) {
+                alert('Thank you for your message! I\'ll get back to you within one business day.');
+                form.reset();
+            })
+            .catch(function(error) {
+                alert('Sorry, there was an error sending your message. Please try again or email directly.');
+                console.error('EmailJS Error:', error);
+            })
+            .finally(function() {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+            });
         }
 
         // Add fade-in animation on scroll
