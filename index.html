@@ -858,17 +858,17 @@
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             if (!emailPattern.test(email)) {
-                showNotification('Please enter a valid email address.', 'error');
+                alert('Please enter a valid email address.');
                 return false;
             }
             
             if (form.name.value.length < 2) {
-                showNotification('Please enter your name.', 'error');
+                alert('Please enter your name.');
                 return false;
             }
             
             if (form.message.value.length < 10) {
-                showNotification('Please enter a message (minimum 10 characters).', 'error');
+                alert('Please enter a message (minimum 10 characters).');
                 return false;
             }
             
@@ -886,7 +886,7 @@
             }
             
             if (!checkRateLimit(email)) {
-                showNotification('Too many submissions. Please try again later.', 'error');
+                alert('Too many submissions. Please try again later.');
                 return;
             }
 
