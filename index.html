@@ -853,6 +853,27 @@
             return true;
         }
 
+        function validateForm(form) {
+            const email = form.email.value;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailPattern.test(email)) {
+                showNotification('Please enter a valid email address.', 'error');
+                return false;
+            }
+            
+            if (form.name.value.length < 2) {
+                showNotification('Please enter your name.', 'error');
+                return false;
+            }
+            
+            if (form.message.value.length < 10) {
+                showNotification('Please enter a message (minimum 10 characters).', 'error');
+                return false;
+            }
+            
+            return true;
+        }
         // Form submission handler
         function handleFormSubmit(event) {
             event.preventDefault();
