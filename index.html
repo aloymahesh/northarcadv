@@ -760,7 +760,8 @@
                 <h2>Let's Talk</h2>
                 <p>Every engagement starts with a <strong>free 30-minute assessment</strong>. Whether you need strategic leadership, compliance assurance, or delivery acceleration, let's explore how we can help.</p>
             </div>
-            <form class="contact-form" onsubmit="handleFormSubmit(event)">
+            <form class="contact-form" onsubmit="handleFormSubmit(event)" novalidate>
+                
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" required>
@@ -822,11 +823,54 @@
             }
         });
 
+        // Add this before your handleFormSubmit function
+        const formSubmissionCount = {};
+        const MAX_SUBMISSIONS = 3;
+        const SUBMISSION_TIMEOUT = 3600000; // 1 hour in milliseconds
+        
+        function checkRateLimit(email) {
+            const now = Date.now();
+            if (!formSubmissionCount[email]) {
+                formSubmissionCount[email] = {
+                    count: 1,
+                    timestamp: now
+                };
+                return true;
+            }
+        
+            const submission = formSubmissionCount[email];
+            if (now - submission.timestamp > SUBMISSION_TIMEOUT) {
+                submission.count = 1;
+                submission.timestamp = now;
+                return true;
+            }
+        
+            if (submission.count >= MAX_SUBMISSIONS) {
+                return false;
+            }
+        
+            submission.count++;
+            return true;
+        }
+
         // Form submission handler
         function handleFormSubmit(event) {
             event.preventDefault();
-            
+           
             const form = event.target;
+            const email = form.email.value;
+
+            if (!validateForm(form)) {
+                return;
+            }
+            
+            if (!checkRateLimit(email)) {
+                showNotification('Too many submissions. Please try again later.', 'error');
+                return;
+            }
+
+            
+
             const submitButton = form.querySelector('button[type="submit"]');
             const originalButtonText = submitButton.innerHTML;
             
