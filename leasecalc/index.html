@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novated Lease Calculator | NorthArc Advisory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2c5282;
+            --accent: #38a169;
+            --accent-light: #48bb78;
+            --surface: #ffffff;
+            --surface-alt: #f7fafc;
+            --border: #e2e8f0;
+            --text: #1a202c;
+            --text-muted: #718096;
+            --savings: #276749;
+            --savings-bg: #c6f6d5;
+            --input-bg: #edf2f7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .calculator-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .calculator-header h1 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .calculator-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .calculator-card {
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+                        0 10px 15px -3px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .section {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 1.1rem;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.75rem 0.875rem;
+            padding-left: 1.75rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text);
+            background: var(--input-bg);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.1);
+        }
+
+        input[type="number"]:hover {
+            background: #e2e8f0;
+        }
+
+        input[type="number"]:focus:hover {
+            background: var(--surface);
+        }
+
+        .results-section {
+            background: var(--surface-alt);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .result-card {
+            background: var(--surface);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        .result-card.highlight {
+            background: linear-gradient(135deg, var(--savings-bg) 0%, #9ae6b4 100%);
+            border-color: var(--accent);
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.25rem;
+        }
+
+        .highlight .result-label {
+            color: var(--savings);
+        }
+
+        .result-value {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .highlight .result-value {
+            color: var(--savings);
+        }
+
+        .result-subtext {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .highlight .result-subtext {
+            color: var(--savings);
+            opacity: 0.8;
+        }
+
+        .savings-breakdown {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--savings-bg) 0%, #9ae6b4 100%);
+            border-radius: 12px;
+            border: 1px solid var(--accent);
+        }
+
+        .savings-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--savings);
+            margin-bottom: 1rem;
+        }
+
+        .savings-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .savings-headers {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--savings);
+            opacity: 0.7;
+            padding-bottom: 0.5rem;
+            order: -1;
+        }
+
+        .savings-item {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .savings-item-label {
+            font-size: 0.85rem;
+            color: var(--savings);
+            font-weight: 500;
+        }
+
+        .savings-item-values {
+            display: contents;
+        }
+
+        .savings-item-values span {
+            background: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--savings);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .savings-item.total {
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 2px solid rgba(39, 103, 73, 0.2);
+        }
+
+        .savings-item.total .savings-item-label {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .savings-item.total .savings-item-values span {
+            background: var(--savings);
+            color: white;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 540px) {
+            .savings-headers,
+            .savings-item {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .savings-headers span:first-child,
+            .savings-item-label {
+                grid-column: 1 / -1;
+                margin-bottom: 0.25rem;
+            }
+        }
+
+        .comparison-section {
+            padding: 1.5rem 2rem;
+            background: var(--surface);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        @media (max-width: 640px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            .comparison-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        .comparison-card {
+            text-align: center;
+            padding: 1.25rem;
+            border-radius: 10px;
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+        }
+
+        .comparison-card.after {
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+            border-color: var(--primary-light);
+        }
+
+        .comparison-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-card.after .comparison-title {
+            color: var(--primary);
+        }
+
+        .comparison-value {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .comparison-card.after .comparison-value {
+            color: var(--primary);
+        }
+
+        .comparison-detail {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        .comparison-card.after .comparison-detail {
+            color: var(--primary-light);
+        }
+
+        .comparison-arrow {
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+
+        .disclaimer {
+            margin-top: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--surface);
+            border-radius: 10px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .disclaimer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .costs-breakdown {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--input-bg);
+            border-radius: 8px;
+        }
+
+        .costs-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            font-size: 0.9rem;
+        }
+
+        .costs-row.total {
+            border-top: 1px solid var(--border);
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            font-weight: 600;
+        }
+
+        .costs-label {
+            color: var(--text-muted);
+        }
+
+        .costs-value {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .section-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            margin-top: -0.5rem;
+        }
+
+        .tax-comparison-table {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .tax-table-header {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .tax-table-header > div {
+            padding: 0.875rem 1rem;
+        }
+
+        .tax-table-header .highlight-col {
+            background: var(--accent);
+        }
+
+        .tax-table-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tax-table-row:last-child {
+            border-bottom: none;
+        }
+
+        .tax-table-row > div {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .tax-table-row .tax-col-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .tax-table-row .tax-col-value {
+            text-align: right;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .tax-table-row .highlight-col {
+            background: var(--savings-bg);
+            color: var(--savings);
+            font-weight: 600;
+        }
+
+        .tax-table-row.total-row {
+            background: var(--surface-alt);
+            font-weight: 600;
+        }
+
+        .tax-table-row.total-row .tax-col-label {
+            color: var(--text);
+        }
+
+        .tax-table-row.net-row {
+            background: var(--input-bg);
+        }
+
+        .tax-table-row.net-row .tax-col-label,
+        .tax-table-row.net-row .tax-col-value {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 540px) {
+            .tax-table-header,
+            .tax-table-row {
+                grid-template-columns: 1.2fr 0.9fr 0.9fr 0.9fr;
+            }
+            .tax-table-header > div,
+            .tax-table-row > div {
+                padding: 0.65rem 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <header class="calculator-header">
+            <h1>Novated Lease Calculator</h1>
+            <p>Estimate your potential tax savings with salary packaging a vehicle through a novated lease.</p>
+        </header>
+
+        <div class="calculator-card">
+            <section class="section">
+                <h2 class="section-title">Your Income</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="grossSalary">Gross Annual Salary</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="grossSalary" value="160000" min="0" step="1000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="medicareRate">Medicare Levy Rate</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="medicareRate" value="2" min="0" max="10" step="0.1" style="padding-left: 0.875rem; padding-right: 2rem;">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Vehicle Details</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="carCost">Vehicle Cost (FBT Base)</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="carCost" value="55075" min="0" step="1000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="leasePayment">Annual Lease Payment</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="leasePayment" value="10315" min="0" step="100">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Running Costs (Annual)</h2>
+                <p class="section-subtitle">Enter your estimated annual running costs. GST will be added automatically.</p>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="fuel">Fuel</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="fuel" value="1566" min="0" step="50">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="servicing">Servicing</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="servicing" value="540" min="0" step="10">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="tyres">Tyres</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="tyres" value="400" min="0" step="10">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="registration">Registration + CTP</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="registration" value="1012" min="0" step="50">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="insurance">Insurance</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="insurance" value="1561" min="0" step="10">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="management">Management Fee</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="management" value="348" min="0" step="10">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="roadside">Roadside Assist</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="roadside" value="60" min="0" step="10">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="costs-breakdown">
+                    <div class="costs-row">
+                        <span class="costs-label">Running Costs Subtotal</span>
+                        <span class="costs-value" id="subtotalCosts">$0</span>
+                    </div>
+                    <div class="costs-row">
+                        <span class="costs-label">GST (10%)</span>
+                        <span class="costs-value" id="gstAmount">$0</span>
+                    </div>
+                    <div class="costs-row total">
+                        <span class="costs-label">Total Running Costs</span>
+                        <span class="costs-value" id="totalRunningCosts">$0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Tax Comparison</h2>
+                <div class="tax-comparison-table">
+                    <div class="tax-table-header">
+                        <div class="tax-col-label"></div>
+                        <div class="tax-col-value">Without Lease</div>
+                        <div class="tax-col-value">With Lease</div>
+                        <div class="tax-col-value highlight-col">Difference</div>
+                    </div>
+                    <div class="tax-table-row">
+                        <div class="tax-col-label">Taxable Income</div>
+                        <div class="tax-col-value" id="taxableWithout">$0</div>
+                        <div class="tax-col-value" id="taxableWith">$0</div>
+                        <div class="tax-col-value highlight-col" id="taxableDiff">$0</div>
+                    </div>
+                    <div class="tax-table-row">
+                        <div class="tax-col-label">PAYG Tax</div>
+                        <div class="tax-col-value" id="paygWithout">$0</div>
+                        <div class="tax-col-value" id="paygWith">$0</div>
+                        <div class="tax-col-value highlight-col" id="paygDiff">$0</div>
+                    </div>
+                    <div class="tax-table-row">
+                        <div class="tax-col-label">Medicare Levy</div>
+                        <div class="tax-col-value" id="medicareWithout">$0</div>
+                        <div class="tax-col-value" id="medicareWith">$0</div>
+                        <div class="tax-col-value highlight-col" id="medicareDiff">$0</div>
+                    </div>
+                    <div class="tax-table-row total-row">
+                        <div class="tax-col-label">Total Tax</div>
+                        <div class="tax-col-value" id="totalTaxWithout">$0</div>
+                        <div class="tax-col-value" id="totalTaxWith">$0</div>
+                        <div class="tax-col-value highlight-col" id="totalTaxDiff">$0</div>
+                    </div>
+                    <div class="tax-table-row net-row">
+                        <div class="tax-col-label">Net Income</div>
+                        <div class="tax-col-value" id="netWithout">$0</div>
+                        <div class="tax-col-value" id="netWith">$0</div>
+                        <div class="tax-col-value highlight-col" id="netDiff">$0</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section comparison-section">
+                <h2 class="section-title">Take-Home Pay After Vehicle Costs</h2>
+                <p class="section-subtitle">Comparing what you keep after paying for the vehicle in each scenario</p>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <div class="comparison-title">Without Novated Lease</div>
+                        <div class="comparison-value" id="takeHomeWithout">$0</div>
+                        <div class="comparison-detail">Pay vehicle costs from after-tax income</div>
+                    </div>
+                    <div class="comparison-arrow">→</div>
+                    <div class="comparison-card after">
+                        <div class="comparison-title">With Novated Lease</div>
+                        <div class="comparison-value" id="takeHomeWith">$0</div>
+                        <div class="comparison-detail">Pre-tax salary sacrifice + post-tax ECM</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section results-section">
+                <h2 class="section-title">Your Package Summary</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-label">Pre-Tax Contribution</div>
+                        <div class="result-value" id="preTaxContribution">$0</div>
+                        <div class="result-subtext">Salary sacrifice amount</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Post-Tax ECM</div>
+                        <div class="result-value" id="postTaxECM">$0</div>
+                        <div class="result-subtext">Employee contribution</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Total Vehicle Cost</div>
+                        <div class="result-value" id="totalVehicleCost">$0</div>
+                        <div class="result-subtext">Annual running costs inc. GST</div>
+                    </div>
+                </div>
+                
+                <div class="savings-breakdown">
+                    <h3 class="savings-title">Summary of Savings</h3>
+                    <div class="savings-grid">
+                        <div class="savings-item">
+                            <div class="savings-item-label">Income Tax Savings</div>
+                            <div class="savings-item-values">
+                                <span id="taxSavingsWeekly">$0</span>
+                                <span id="taxSavingsMonthly">$0</span>
+                                <span id="taxSavingsAnnual">$0</span>
+                            </div>
+                        </div>
+                        <div class="savings-item">
+                            <div class="savings-item-label">GST Savings</div>
+                            <div class="savings-item-values">
+                                <span id="gstSavingsWeekly">$0</span>
+                                <span id="gstSavingsMonthly">$0</span>
+                                <span id="gstSavingsAnnual">$0</span>
+                            </div>
+                        </div>
+                        <div class="savings-item total">
+                            <div class="savings-item-label">Total Savings</div>
+                            <div class="savings-item-values">
+                                <span id="totalSavingsWeekly">$0</span>
+                                <span id="totalSavingsMonthly">$0</span>
+                                <span id="totalSavingsAnnual">$0</span>
+                            </div>
+                        </div>
+                        <div class="savings-headers">
+                            <span></span>
+                            <span>Weekly</span>
+                            <span>Monthly</span>
+                            <span>Annually</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> This calculator provides estimates only based on the 2024-25 Australian tax rates (post Stage 3 tax cuts). Results may vary based on your individual circumstances, employer arrangements, and the specific terms of your novated lease. This is not financial advice. Please consult a qualified financial advisor or your novated lease provider for accurate figures specific to your situation.</p>
+        </div>
+    </div>
+
+    <script>
+        // Australian Tax Rates 2024-25
+        function calculatePAYG(taxableIncome) {
+            if (taxableIncome <= 18200) {
+                return 0;
+            } else if (taxableIncome <= 45000) {
+                return (taxableIncome - 18200) * 0.16;
+            } else if (taxableIncome <= 135000) {
+                return 4288 + (taxableIncome - 45000) * 0.30;
+            } else if (taxableIncome <= 190000) {
+                return 31288 + (taxableIncome - 135000) * 0.37;
+            } else {
+                return 51638 + (taxableIncome - 190000) * 0.45;
+            }
+        }
+
+        function formatCurrency(amount) {
+            return '$' + Math.round(amount).toLocaleString('en-AU');
+        }
+
+        function calculate() {
+            // Get inputs
+            const grossSalary = parseFloat(document.getElementById('grossSalary').value) || 0;
+            const medicareRate = (parseFloat(document.getElementById('medicareRate').value) || 2) / 100;
+            const carCost = parseFloat(document.getElementById('carCost').value) || 0;
+            const leasePayment = parseFloat(document.getElementById('leasePayment').value) || 0;
+            const fuel = parseFloat(document.getElementById('fuel').value) || 0;
+            const servicing = parseFloat(document.getElementById('servicing').value) || 0;
+            const tyres = parseFloat(document.getElementById('tyres').value) || 0;
+            const registration = parseFloat(document.getElementById('registration').value) || 0;
+            const insurance = parseFloat(document.getElementById('insurance').value) || 0;
+            const management = parseFloat(document.getElementById('management').value) || 0;
+            const roadside = parseFloat(document.getElementById('roadside').value) || 0;
+
+            // Calculate FBT value (20% of car cost - Employee Contribution Method)
+            const fbtValue = carCost * 0.20;
+
+            // Calculate running costs with GST
+            const runningCostsSubtotal = leasePayment + fuel + servicing + tyres + registration + insurance + management + roadside;
+            const gstOnCosts = runningCostsSubtotal * 0.10;
+            const totalRunningCosts = runningCostsSubtotal * 1.10;
+
+            // Calculate package breakdown
+            // beCarWise methodology:
+            // 1. Total gross cost = running costs + GST
+            // 2. Less Employee Contribution (ECM) = FBT value
+            // 3. Net cost before GST credit
+            // 4. GST credit = 10% of net cost / 1.1 (i.e., GST component of net cost)
+            // 5. Salary sacrifice = net cost - GST credit
+            
+            const grossAnnualCost = totalRunningCosts;
+            const employeeContribution = fbtValue; // Post-tax ECM
+            const netCostIncGST = grossAnnualCost - employeeContribution;
+            const gstInputCredit = netCostIncGST / 11; // GST is 1/11th of GST-inclusive amount
+            const salarySacrificeAmount = netCostIncGST - gstInputCredit;
+
+            // Without novated lease
+            const taxableIncomeWithout = grossSalary;
+            const paygWithout = calculatePAYG(taxableIncomeWithout);
+            const medicareLevyWithout = grossSalary * medicareRate;
+            const netIncomeWithout = grossSalary - paygWithout - medicareLevyWithout;
+
+            // With novated lease
+            const taxableIncomeWith = grossSalary - salarySacrificeAmount;
+            const paygWith = calculatePAYG(taxableIncomeWith);
+            const medicareLevyWith = taxableIncomeWith * medicareRate;
+            const netIncomeWith = taxableIncomeWith - paygWith - medicareLevyWith;
+
+            // Savings calculation
+            // Without packaging: pay for car from after-tax income = net income - total car cost
+            // With packaging: salary sacrifice reduces tax, then pay ECM from after-tax income
+            const takeHomeWithout = netIncomeWithout - totalRunningCosts; // After paying for car out of pocket
+            const takeHomeWith = netIncomeWith - employeeContribution; // After paying post-tax ECM
+            
+            // The savings is the difference in take-home pay (what beCarWise shows)
+            const annualSavings = takeHomeWith - takeHomeWithout;
+            
+            // Tax savings component
+            const taxSavings = (paygWithout - paygWith) + (medicareLevyWithout - medicareLevyWith);
+            
+            // GST savings component
+            const gstSavings = gstInputCredit;
+
+            // Update display - cost breakdown
+            document.getElementById('subtotalCosts').textContent = formatCurrency(runningCostsSubtotal);
+            document.getElementById('gstAmount').textContent = formatCurrency(gstOnCosts);
+            document.getElementById('totalRunningCosts').textContent = formatCurrency(totalRunningCosts);
+
+            // Update display - tax comparison table
+            document.getElementById('taxableWithout').textContent = formatCurrency(taxableIncomeWithout);
+            document.getElementById('taxableWith').textContent = formatCurrency(taxableIncomeWith);
+            document.getElementById('taxableDiff').textContent = formatCurrency(taxableIncomeWithout - taxableIncomeWith);
+
+            document.getElementById('paygWithout').textContent = formatCurrency(paygWithout);
+            document.getElementById('paygWith').textContent = formatCurrency(paygWith);
+            document.getElementById('paygDiff').textContent = formatCurrency(paygWithout - paygWith);
+
+            document.getElementById('medicareWithout').textContent = formatCurrency(medicareLevyWithout);
+            document.getElementById('medicareWith').textContent = formatCurrency(medicareLevyWith);
+            document.getElementById('medicareDiff').textContent = formatCurrency(medicareLevyWithout - medicareLevyWith);
+
+            const totalTaxWithout = paygWithout + medicareLevyWithout;
+            const totalTaxWith = paygWith + medicareLevyWith;
+            document.getElementById('totalTaxWithout').textContent = formatCurrency(totalTaxWithout);
+            document.getElementById('totalTaxWith').textContent = formatCurrency(totalTaxWith);
+            document.getElementById('totalTaxDiff').textContent = formatCurrency(totalTaxWithout - totalTaxWith);
+
+            document.getElementById('netWithout').textContent = formatCurrency(netIncomeWithout);
+            document.getElementById('netWith').textContent = formatCurrency(netIncomeWith);
+            document.getElementById('netDiff').textContent = formatCurrency(netIncomeWith - netIncomeWithout);
+
+            // Update display - comparison
+            document.getElementById('takeHomeWithout').textContent = formatCurrency(takeHomeWithout);
+            document.getElementById('takeHomeWith').textContent = formatCurrency(takeHomeWith);
+
+            // Update display - package summary
+            document.getElementById('preTaxContribution').textContent = formatCurrency(salarySacrificeAmount);
+            document.getElementById('postTaxECM').textContent = formatCurrency(employeeContribution);
+            document.getElementById('totalVehicleCost').textContent = formatCurrency(totalRunningCosts);
+            
+            // Update savings breakdown
+            document.getElementById('taxSavingsWeekly').textContent = formatCurrency(taxSavings / 52);
+            document.getElementById('taxSavingsMonthly').textContent = formatCurrency(taxSavings / 12);
+            document.getElementById('taxSavingsAnnual').textContent = formatCurrency(taxSavings);
+            
+            document.getElementById('gstSavingsWeekly').textContent = formatCurrency(gstSavings / 52);
+            document.getElementById('gstSavingsMonthly').textContent = formatCurrency(gstSavings / 12);
+            document.getElementById('gstSavingsAnnual').textContent = formatCurrency(gstSavings);
+            
+            const totalSavings = taxSavings + gstSavings;
+            document.getElementById('totalSavingsWeekly').textContent = formatCurrency(totalSavings / 52);
+            document.getElementById('totalSavingsMonthly').textContent = formatCurrency(totalSavings / 12);
+            document.getElementById('totalSavingsAnnual').textContent = formatCurrency(totalSavings);
+        }
+
+        // Add event listeners to all inputs
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
