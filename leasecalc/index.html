@@ -253,6 +253,33 @@
             background: linear-gradient(135deg, var(--savings-bg) 0%, #9ae6b4 100%);
             border-radius: 12px;
             border: 1px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .savings-breakdown.negative {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            border-color: #c53030;
+        }
+
+        .savings-breakdown.negative .savings-title {
+            color: #c53030;
+        }
+
+        .savings-breakdown.negative .savings-item-label {
+            color: #c53030;
+        }
+
+        .savings-breakdown.negative .savings-headers {
+            color: #c53030;
+        }
+
+        .savings-breakdown.negative .savings-item-values span {
+            color: #c53030;
+        }
+
+        .savings-breakdown.negative .savings-item.total .savings-item-values span {
+            background: #c53030;
+            color: white;
         }
 
         .savings-title {
@@ -551,6 +578,200 @@
                 font-size: 0.8rem;
             }
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.75rem;
+            }
+
+            .section {
+                padding: 1.25rem 1rem;
+            }
+
+            .comparison-section {
+                padding: 1.25rem 1rem;
+            }
+
+            .calculator-header {
+                margin-bottom: 1.5rem;
+            }
+
+            .calculator-header p {
+                font-size: 0.9rem;
+                padding: 0 0.5rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+                gap: 0.875rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .result-card {
+                padding: 0.875rem 1rem;
+            }
+
+            .result-value {
+                font-size: 1.25rem;
+            }
+
+            .comparison-value {
+                font-size: 1.5rem;
+            }
+
+            .disclaimer {
+                padding: 0.875rem 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section {
+                padding: 1rem 0.875rem;
+            }
+
+            .comparison-section {
+                padding: 1rem 0.875rem;
+            }
+
+            .section-title {
+                font-size: 0.95rem;
+            }
+
+            .section-subtitle {
+                font-size: 0.8rem;
+            }
+
+            /* Tax comparison table - stack on very small screens */
+            .tax-table-header,
+            .tax-table-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 0;
+            }
+
+            .tax-table-header > div:first-child,
+            .tax-table-row > .tax-col-label {
+                grid-column: 1 / -1;
+                text-align: left;
+                padding-bottom: 0.25rem;
+            }
+
+            .tax-table-header > div:first-child {
+                display: none;
+            }
+
+            .tax-table-row > .tax-col-value {
+                text-align: center;
+            }
+
+            .tax-table-row {
+                padding: 0.5rem 0;
+            }
+
+            /* Savings breakdown - more compact */
+            .savings-breakdown {
+                padding: 1rem;
+            }
+
+            .savings-headers {
+                display: none;
+            }
+
+            .savings-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                padding: 0.5rem 0;
+            }
+
+            .savings-item-label {
+                font-size: 0.8rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .savings-item-values {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.35rem;
+            }
+
+            .savings-item-values span {
+                padding: 0.4rem 0.25rem;
+                font-size: 0.8rem;
+            }
+
+            .savings-item-values span::before {
+                display: block;
+                font-size: 0.6rem;
+                font-weight: 400;
+                opacity: 0.7;
+                margin-bottom: 0.1rem;
+            }
+
+            .savings-item:nth-child(2) .savings-item-values span:nth-child(1)::before,
+            .savings-item:nth-child(3) .savings-item-values span:nth-child(1)::before,
+            .savings-item:nth-child(4) .savings-item-values span:nth-child(1)::before {
+                content: 'Weekly';
+            }
+
+            .savings-item:nth-child(2) .savings-item-values span:nth-child(2)::before,
+            .savings-item:nth-child(3) .savings-item-values span:nth-child(2)::before,
+            .savings-item:nth-child(4) .savings-item-values span:nth-child(2)::before {
+                content: 'Monthly';
+            }
+
+            .savings-item:nth-child(2) .savings-item-values span:nth-child(3)::before,
+            .savings-item:nth-child(3) .savings-item-values span:nth-child(3)::before,
+            .savings-item:nth-child(4) .savings-item-values span:nth-child(3)::before {
+                content: 'Annually';
+            }
+
+            .savings-item.total .savings-item-values span {
+                font-size: 0.85rem;
+            }
+
+            /* Input styling for touch */
+            input[type="number"] {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 0.875rem 0.875rem;
+                padding-left: 1.75rem;
+            }
+
+            .costs-breakdown {
+                padding: 0.75rem;
+            }
+
+            .costs-row {
+                font-size: 0.85rem;
+            }
+
+            .comparison-card {
+                padding: 1rem;
+            }
+
+            .comparison-detail {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            input[type="number"] {
+                min-height: 48px;
+            }
+
+            .input-group label {
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -568,7 +789,7 @@
                         <label for="grossSalary">Gross Annual Salary</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="grossSalary" value="80000" min="0" step="1000">
+                            <input type="number" id="grossSalary" value="160000" min="0" step="1000">
                         </div>
                     </div>
                     <div class="input-group">
@@ -588,14 +809,14 @@
                         <label for="carCost">Vehicle Cost (FBT Base)</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="carCost" value="55075" min="0" step="1000">
+                            <input type="number" id="carCost" value="60000" min="0" step="1000">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="leasePayment">Annual Lease Payment</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="leasePayment" value="10315" min="0" step="100">
+                            <input type="number" id="leasePayment" value="10000" min="0" step="100">
                         </div>
                     </div>
                 </div>
@@ -616,7 +837,7 @@
                         <label for="servicing">Servicing</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="servicing" value="540" min="0" step="10">
+                            <input type="number" id="servicing" value="500" min="0" step="10">
                         </div>
                     </div>
                     <div class="input-group">
@@ -630,28 +851,28 @@
                         <label for="registration">Registration + CTP</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="registration" value="1012" min="0" step="50">
+                            <input type="number" id="registration" value="1000" min="0" step="50">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="insurance">Insurance</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="insurance" value="1561" min="0" step="10">
+                            <input type="number" id="insurance" value="1500" min="0" step="10">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="management">Management Fee</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="management" value="348" min="0" step="10">
+                            <input type="number" id="management" value="300" min="0" step="10">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="roadside">Roadside Assist</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="roadside" value="60" min="0" step="10">
+                            <input type="number" id="roadside" value="50" min="0" step="10">
                         </div>
                     </div>
                 </div>
@@ -928,6 +1149,14 @@
             document.getElementById('totalSavingsWeekly').textContent = formatCurrency(totalSavings / 52);
             document.getElementById('totalSavingsMonthly').textContent = formatCurrency(totalSavings / 12);
             document.getElementById('totalSavingsAnnual').textContent = formatCurrency(totalSavings);
+            
+            // Toggle negative styling if savings are negative
+            const savingsBreakdown = document.querySelector('.savings-breakdown');
+            if (totalSavings < 0) {
+                savingsBreakdown.classList.add('negative');
+            } else {
+                savingsBreakdown.classList.remove('negative');
+            }
         }
 
         // Add event listeners to all inputs
