@@ -116,6 +116,56 @@
             gap: 1rem;
         }
 
+        .vehicle-type-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            background: var(--input-bg);
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 0.65rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn:hover {
+            color: var(--text);
+        }
+
+        .toggle-btn.active {
+            background: var(--surface);
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-btn.ev-active {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .toggle-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            margin-top: -0.5rem;
+        }
+
+        .toggle-hint.ev-hint {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
         .input-group {
             display: flex;
             flex-direction: column;
@@ -192,6 +242,79 @@
 
         .results-section {
             background: var(--surface-alt);
+        }
+
+        .calculation-breakdown {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .breakdown-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.75rem;
+        }
+
+        .breakdown-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .breakdown-step {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+        }
+
+        .step-label {
+            color: var(--text-muted);
+        }
+
+        .step-value {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .step-value.negative {
+            color: #c53030;
+        }
+
+        .breakdown-step.subtotal {
+            border-top: 1px dashed var(--border);
+            padding-top: 0.6rem;
+            margin-top: 0.25rem;
+        }
+
+        .breakdown-step.subtotal .step-label,
+        .breakdown-step.subtotal .step-value {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .breakdown-step.total {
+            border-top: 2px solid var(--primary);
+            padding-top: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .breakdown-step.total .step-label {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .breakdown-step.total .step-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
         }
 
         .results-grid {
@@ -804,6 +927,13 @@
 
             <section class="section">
                 <h2 class="section-title">Vehicle Details</h2>
+                
+                <div class="vehicle-type-toggle">
+                    <button type="button" class="toggle-btn active" id="btnStandard" onclick="setVehicleType('standard')">Standard Vehicle</button>
+                    <button type="button" class="toggle-btn" id="btnEV" onclick="setVehicleType('ev')">Electric Vehicle (EV)</button>
+                </div>
+                <p class="toggle-hint" id="toggleHint">20% statutory FBT rate applies</p>
+                
                 <div class="input-grid">
                     <div class="input-group">
                         <label for="carCost">Vehicle Cost (FBT Base)</label>
@@ -830,7 +960,7 @@
                         <label for="fuel">Fuel</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="fuel" value="2000" min="0" step="50">
+                            <input type="number" id="fuel" value="1500" min="0" step="50">
                         </div>
                     </div>
                     <div class="input-group">
@@ -955,6 +1085,33 @@
 
             <section class="section results-section">
                 <h2 class="section-title">Your Package Summary</h2>
+                
+                <div class="calculation-breakdown">
+                    <h3 class="breakdown-title">How Your Contributions Are Calculated</h3>
+                    <div class="breakdown-steps">
+                        <div class="breakdown-step">
+                            <span class="step-label">Total Running Costs (inc GST)</span>
+                            <span class="step-value" id="calcTotalCost">$0</span>
+                        </div>
+                        <div class="breakdown-step">
+                            <span class="step-label">Less: Post-Tax ECM (FBT Base × 20%)</span>
+                            <span class="step-value negative" id="calcECM">−$0</span>
+                        </div>
+                        <div class="breakdown-step subtotal">
+                            <span class="step-label">Net Cost</span>
+                            <span class="step-value" id="calcNetCost">$0</span>
+                        </div>
+                        <div class="breakdown-step">
+                            <span class="step-label">Less: GST Credit (Net Cost ÷ 11)</span>
+                            <span class="step-value negative" id="calcGSTCredit">−$0</span>
+                        </div>
+                        <div class="breakdown-step total">
+                            <span class="step-label">Pre-Tax Salary Sacrifice</span>
+                            <span class="step-value" id="calcSalarySacrifice">$0</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="results-grid">
                     <div class="result-card">
                         <div class="result-label">Pre-Tax Contribution</div>
@@ -964,7 +1121,7 @@
                     <div class="result-card">
                         <div class="result-label">Post-Tax ECM</div>
                         <div class="result-value" id="postTaxECM">$0</div>
-                        <div class="result-subtext">Employee contribution</div>
+                        <div class="result-subtext">FBT Base × 20%</div>
                     </div>
                     <div class="result-card">
                         <div class="result-label">Total Vehicle Cost</div>
@@ -1017,6 +1174,32 @@
     </div>
 
     <script>
+        // Vehicle type state
+        let isEV = false;
+
+        function setVehicleType(type) {
+            isEV = (type === 'ev');
+            
+            const btnStandard = document.getElementById('btnStandard');
+            const btnEV = document.getElementById('btnEV');
+            const toggleHint = document.getElementById('toggleHint');
+            
+            if (isEV) {
+                btnStandard.classList.remove('active');
+                btnEV.classList.remove('active');
+                btnEV.classList.add('active', 'ev-active');
+                toggleHint.textContent = 'FBT exempt — 0% rate applies';
+                toggleHint.classList.add('ev-hint');
+            } else {
+                btnEV.classList.remove('active', 'ev-active');
+                btnStandard.classList.add('active');
+                toggleHint.textContent = '20% statutory FBT rate applies';
+                toggleHint.classList.remove('ev-hint');
+            }
+            
+            calculate();
+        }
+
         // Australian Tax Rates 2024-25
         function calculatePAYG(taxableIncome) {
             if (taxableIncome <= 18200) {
@@ -1050,8 +1233,9 @@
             const management = parseFloat(document.getElementById('management').value) || 0;
             const roadside = parseFloat(document.getElementById('roadside').value) || 0;
 
-            // Calculate FBT value (20% of car cost - Employee Contribution Method)
-            const fbtValue = carCost * 0.20;
+            // Calculate FBT value (20% for standard, 0% for EV)
+            const fbtRate = isEV ? 0 : 0.20;
+            const fbtValue = carCost * fbtRate;
 
             // Calculate running costs with GST
             const runningCostsSubtotal = leasePayment + fuel + servicing + tyres + registration + insurance + management + roadside;
@@ -1135,6 +1319,21 @@
             document.getElementById('preTaxContribution').textContent = formatCurrency(salarySacrificeAmount);
             document.getElementById('postTaxECM').textContent = formatCurrency(employeeContribution);
             document.getElementById('totalVehicleCost').textContent = formatCurrency(totalRunningCosts);
+            
+            // Update ECM subtext
+            const ecmSubtext = document.querySelector('#postTaxECM').nextElementSibling;
+            ecmSubtext.textContent = isEV ? 'FBT Exempt (0%)' : 'FBT Base × 20%';
+            
+            // Update calculation breakdown
+            document.getElementById('calcTotalCost').textContent = formatCurrency(totalRunningCosts);
+            document.getElementById('calcECM').textContent = '−' + formatCurrency(employeeContribution);
+            document.getElementById('calcNetCost').textContent = formatCurrency(netCostIncGST);
+            document.getElementById('calcGSTCredit').textContent = '−' + formatCurrency(gstInputCredit);
+            document.getElementById('calcSalarySacrifice').textContent = formatCurrency(salarySacrificeAmount);
+            
+            // Update ECM label to show current FBT rate
+            const ecmLabel = document.querySelector('.breakdown-step:nth-child(2) .step-label');
+            ecmLabel.textContent = isEV ? 'Less: Post-Tax ECM (FBT Exempt — 0%)' : 'Less: Post-Tax ECM (FBT Base × 20%)';
             
             // Update savings breakdown
             document.getElementById('taxSavingsWeekly').textContent = formatCurrency(taxSavings / 52);
