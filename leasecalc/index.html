@@ -240,6 +240,19 @@
             background: var(--surface);
         }
 
+        input[type="number"].readonly-input {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            color: var(--primary);
+            font-weight: 600;
+            cursor: default;
+        }
+
+        input[type="number"].readonly-input:focus {
+            border-color: var(--border);
+            box-shadow: none;
+        }
+
         .results-section {
             background: var(--surface-alt);
         }
@@ -577,6 +590,166 @@
             line-height: 1.5;
         }
 
+        .finance-comparison {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+                        0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+
+        .comparison-title-main {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+
+        .finance-comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .finance-comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .finance-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .finance-card.highlight {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+
+        .finance-card-header {
+            padding: 0.75rem 1rem;
+            background: var(--surface-alt);
+            font-weight: 600;
+            color: var(--text);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .finance-card.highlight .finance-card-header {
+            background: var(--accent);
+            color: white;
+        }
+
+        .finance-card-body {
+            padding: 1rem;
+        }
+
+        .finance-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .finance-row span:last-child {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .finance-row.total {
+            border-top: 1px solid var(--border);
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            font-weight: 600;
+        }
+
+        .finance-row.total span {
+            color: var(--text);
+        }
+
+        .finance-row.subtotal {
+            border-top: 1px dashed var(--border);
+            margin-top: 0.35rem;
+            padding-top: 0.5rem;
+        }
+
+        .finance-row.subtotal span {
+            font-weight: 500;
+        }
+
+        .finance-row.savings {
+            color: var(--savings);
+        }
+
+        .finance-row.savings span {
+            color: var(--savings) !important;
+        }
+
+        .finance-card.highlight .finance-row.total span:last-child {
+            color: var(--accent);
+        }
+
+        .finance-row.note {
+            font-size: 0.75rem;
+            font-style: italic;
+            color: var(--text-muted);
+            justify-content: center;
+            padding-top: 0.5rem;
+        }
+
+        .finance-row.note span {
+            font-weight: 400 !important;
+            color: var(--text-muted) !important;
+        }
+
+        .savings-summary {
+            margin-top: 1.25rem;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, var(--savings-bg) 0%, #9ae6b4 100%);
+            border-radius: 10px;
+            border: 1px solid var(--accent);
+        }
+
+        .savings-summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            color: var(--savings);
+        }
+
+        .savings-summary-row span:last-child {
+            font-weight: 600;
+        }
+
+        .savings-summary-row.total {
+            border-top: 2px solid rgba(39, 103, 73, 0.3);
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .savings-summary.negative {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            border-color: #c53030;
+        }
+
+        .savings-summary.negative .savings-summary-row {
+            color: #742a2a;
+        }
+
+        .savings-summary.negative .savings-summary-row.total {
+            border-top-color: rgba(197, 48, 48, 0.3);
+            color: #c53030;
+        }
+
         .costs-breakdown {
             margin-top: 1rem;
             padding: 1rem;
@@ -596,6 +769,18 @@
             margin-top: 0.5rem;
             padding-top: 0.75rem;
             font-weight: 600;
+        }
+
+        .costs-row.subtotal {
+            border-top: 1px dashed var(--border);
+            margin-top: 0.25rem;
+            padding-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .costs-row.subtotal .costs-label,
+        .costs-row.subtotal .costs-value {
+            color: var(--text);
         }
 
         .costs-label {
@@ -939,14 +1124,111 @@
                         <label for="carCost">Vehicle Cost (FBT Base)</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="carCost" value="60000" min="0" step="1000">
+                            <input type="number" id="carCost" value="55075" min="0" step="1000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="carCostIncGST">Vehicle Cost (inc GST)</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="carCostIncGST" value="60583" min="0" step="100" readonly class="readonly-input">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Novated Lease Option</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="leaseTerm">Lease Term</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="leaseTerm" value="60" min="12" max="60" step="12" style="padding-left: 0.875rem; padding-right: 3rem;">
+                            <span class="input-suffix">months</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="leaseRate">Interest Rate (p.a.)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="leaseRate" value="8.3" min="0" max="25" step="0.1" style="padding-left: 0.875rem; padding-right: 2rem;">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="residualPercent">Residual Value</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="residualPercent" value="28.13" min="0" max="100" step="0.01" style="padding-left: 0.875rem; padding-right: 2rem;">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="residualValue">Residual Amount (ex GST)</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="residualValue" value="14929" min="0" step="100" readonly class="readonly-input">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="leasePaymentMonthly">Monthly Lease Payment</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="leasePaymentMonthly" value="0" min="0" step="10" readonly class="readonly-input">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="leasePayment">Annual Lease Payment</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="leasePayment" value="10000" min="0" step="100">
+                            <input type="number" id="leasePayment" value="0" min="0" step="100" readonly class="readonly-input">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Finance Option</h2>
+                <p class="section-subtitle">Compare novated lease against financing the vehicle yourself</p>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="financeTerm">Loan Term</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="financeTerm" value="60" min="12" max="84" step="12" style="padding-left: 0.875rem; padding-right: 3rem;">
+                            <span class="input-suffix">months</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="financeRate">Interest Rate (p.a.)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="financeRate" value="7.5" min="0" max="25" step="0.1" style="padding-left: 0.875rem; padding-right: 2rem;">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="financeDeposit">Deposit</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="financeDeposit" value="0" min="0" step="1000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="financeResidual">Balloon / Residual</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="financeResidual" value="0" min="0" step="1000">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="financePaymentMonthly">Monthly Repayment</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="financePaymentMonthly" value="0" min="0" step="10" readonly class="readonly-input">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="financePayment">Annual Repayment</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="financePayment" value="0" min="0" step="100" readonly class="readonly-input">
                         </div>
                     </div>
                 </div>
@@ -960,14 +1242,14 @@
                         <label for="fuel">Fuel</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="fuel" value="1500" min="0" step="50">
+                            <input type="number" id="fuel" value="1566" min="0" step="50">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="servicing">Servicing</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="servicing" value="500" min="0" step="10">
+                            <input type="number" id="servicing" value="540" min="0" step="10">
                         </div>
                     </div>
                     <div class="input-group">
@@ -981,28 +1263,28 @@
                         <label for="registration">Registration + CTP</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="registration" value="1000" min="0" step="50">
+                            <input type="number" id="registration" value="1012" min="0" step="50">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="insurance">Insurance</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="insurance" value="1500" min="0" step="10">
+                            <input type="number" id="insurance" value="1561" min="0" step="10">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="management">Management Fee</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="management" value="300" min="0" step="10">
+                            <input type="number" id="management" value="348" min="0" step="10">
                         </div>
                     </div>
                     <div class="input-group">
                         <label for="roadside">Roadside Assist</label>
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
-                            <input type="number" id="roadside" value="50" min="0" step="10">
+                            <input type="number" id="roadside" value="60" min="0" step="10">
                         </div>
                     </div>
                 </div>
@@ -1010,6 +1292,14 @@
                 <div class="costs-breakdown">
                     <div class="costs-row">
                         <span class="costs-label">Running Costs Subtotal</span>
+                        <span class="costs-value" id="runningCostsOnly">$0</span>
+                    </div>
+                    <div class="costs-row">
+                        <span class="costs-label">+ Lease Payment</span>
+                        <span class="costs-value" id="leasePaymentDisplay">$0</span>
+                    </div>
+                    <div class="costs-row subtotal">
+                        <span class="costs-label">Subtotal (Lease + Running Costs)</span>
                         <span class="costs-value" id="subtotalCosts">$0</span>
                     </div>
                     <div class="costs-row">
@@ -1017,7 +1307,7 @@
                         <span class="costs-value" id="gstAmount">$0</span>
                     </div>
                     <div class="costs-row total">
-                        <span class="costs-label">Total Running Costs</span>
+                        <span class="costs-label">Total Novated Lease Costs</span>
                         <span class="costs-value" id="totalRunningCosts">$0</span>
                     </div>
                 </div>
@@ -1171,6 +1461,84 @@
         <div class="disclaimer">
             <p><strong>Disclaimer:</strong> This calculator provides estimates only based on the 2024-25 Australian tax rates (post Stage 3 tax cuts). Results may vary based on your individual circumstances, employer arrangements, and the specific terms of your novated lease. This is not financial advice. Please consult a qualified financial advisor or your novated lease provider for accurate figures specific to your situation.</p>
         </div>
+        
+        <div class="finance-comparison">
+            <h3 class="comparison-title-main">Total Cost of Ownership Comparison</h3>
+            <div class="finance-comparison-grid">
+                <div class="finance-card">
+                    <div class="finance-card-header">Car Loan (<span id="financeTermDisplay">60</span> months)</div>
+                    <div class="finance-card-body">
+                        <div class="finance-row">
+                            <span>Total Loan Repayments</span>
+                            <span id="financeTotalRepayments">$0</span>
+                        </div>
+                        <div class="finance-row">
+                            <span>Total Running Costs</span>
+                            <span id="financeTotalRunning">$0</span>
+                        </div>
+                        <div class="finance-row">
+                            <span>Balloon Payment</span>
+                            <span id="financeBalloonDisplay">$0</span>
+                        </div>
+                        <div class="finance-row total">
+                            <span>Total Cost Over Term</span>
+                            <span id="financeTotalOverTerm">$0</span>
+                        </div>
+                        <div class="finance-row note">
+                            <span>Paid from after-tax income</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="finance-card highlight">
+                    <div class="finance-card-header">Novated Lease (<span id="leaseTermDisplay">60</span> months)</div>
+                    <div class="finance-card-body">
+                        <div class="finance-row">
+                            <span>Total Pre-Tax Contributions</span>
+                            <span id="novatedTotalPreTax">$0</span>
+                        </div>
+                        <div class="finance-row">
+                            <span>Total Post-Tax (ECM)</span>
+                            <span id="novatedTotalPostTax">$0</span>
+                        </div>
+                        <div class="finance-row">
+                            <span>Residual Payment</span>
+                            <span id="novatedResidualPayment">$0</span>
+                        </div>
+                        <div class="finance-row subtotal">
+                            <span>Gross Cost Over Term</span>
+                            <span id="novatedGrossCost">$0</span>
+                        </div>
+                        <div class="finance-row savings">
+                            <span>Less: Tax Savings</span>
+                            <span id="novatedTaxSavingsTotal">−$0</span>
+                        </div>
+                        <div class="finance-row savings">
+                            <span>Less: GST Savings</span>
+                            <span id="novatedGstSavingsTotal">−$0</span>
+                        </div>
+                        <div class="finance-row total">
+                            <span>Net Cost Over Term</span>
+                            <span id="novatedNetCost">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="savings-summary" id="savingsSummary">
+                <div class="savings-summary-row">
+                    <span>Car Loan Total Cost Over Term</span>
+                    <span id="compareLoanTotal">$0</span>
+                </div>
+                <div class="savings-summary-row">
+                    <span>Novated Lease Net Cost Over Term</span>
+                    <span id="compareLeaseTotal">$0</span>
+                </div>
+                <div class="savings-summary-row total">
+                    <span id="savingsLabel">You Save with Novated Lease</span>
+                    <span id="compareTotalSavings">$0</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1200,6 +1568,18 @@
             calculate();
         }
 
+        // Calculate finance repayment (PMT formula with balloon/residual)
+        function calculatePaymentWithBalloon(principal, annualRate, months, balloon) {
+            if (annualRate === 0) {
+                return (principal - balloon) / months;
+            }
+            const monthlyRate = annualRate / 100 / 12;
+            const presentValueOfBalloon = balloon / Math.pow(1 + monthlyRate, months);
+            const adjustedPrincipal = principal - presentValueOfBalloon;
+            const payment = adjustedPrincipal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+            return payment;
+        }
+
         // Australian Tax Rates 2024-25
         function calculatePAYG(taxableIncome) {
             if (taxableIncome <= 18200) {
@@ -1224,7 +1604,9 @@
             const grossSalary = parseFloat(document.getElementById('grossSalary').value) || 0;
             const medicareRate = (parseFloat(document.getElementById('medicareRate').value) || 2) / 100;
             const carCost = parseFloat(document.getElementById('carCost').value) || 0;
-            const leasePayment = parseFloat(document.getElementById('leasePayment').value) || 0;
+            const leaseTerm = parseFloat(document.getElementById('leaseTerm').value) || 60;
+            const leaseRate = parseFloat(document.getElementById('leaseRate').value) || 0;
+            const residualPercent = parseFloat(document.getElementById('residualPercent').value) || 0;
             const fuel = parseFloat(document.getElementById('fuel').value) || 0;
             const servicing = parseFloat(document.getElementById('servicing').value) || 0;
             const tyres = parseFloat(document.getElementById('tyres').value) || 0;
@@ -1232,13 +1614,42 @@
             const insurance = parseFloat(document.getElementById('insurance').value) || 0;
             const management = parseFloat(document.getElementById('management').value) || 0;
             const roadside = parseFloat(document.getElementById('roadside').value) || 0;
+            
+            // Finance inputs
+            const financeRate = parseFloat(document.getElementById('financeRate').value) || 0;
+            const financeTerm = parseFloat(document.getElementById('financeTerm').value) || 60;
+            const financeDeposit = parseFloat(document.getElementById('financeDeposit').value) || 0;
+            const financeResidual = parseFloat(document.getElementById('financeResidual').value) || 0;
+            
+            // Calculate vehicle cost inc GST
+            const carCostIncGST = carCost * 1.1;
+            document.getElementById('carCostIncGST').value = Math.round(carCostIncGST);
+            
+            // Calculate residual value (ex GST)
+            const residualValue = carCost * (residualPercent / 100);
+            document.getElementById('residualValue').value = Math.round(residualValue);
+            
+            // Calculate lease payment (based on FBT base value with residual)
+            const leaseMonthlyPayment = calculatePaymentWithBalloon(carCost, leaseRate, leaseTerm, residualValue);
+            const leaseAnnualPayment = leaseMonthlyPayment * 12;
+            document.getElementById('leasePaymentMonthly').value = Math.round(leaseMonthlyPayment);
+            document.getElementById('leasePayment').value = Math.round(leaseAnnualPayment);
+            const leasePayment = leaseAnnualPayment;
+            
+            // Calculate finance payment (based on GST-inclusive price)
+            const financePrincipal = carCostIncGST - financeDeposit;
+            const financeMonthlyPayment = calculatePaymentWithBalloon(financePrincipal, financeRate, financeTerm, financeResidual);
+            const financeAnnualPayment = financeMonthlyPayment * 12;
+            document.getElementById('financePaymentMonthly').value = Math.round(financeMonthlyPayment);
+            document.getElementById('financePayment').value = Math.round(financeAnnualPayment);
 
             // Calculate FBT value (20% for standard, 0% for EV)
             const fbtRate = isEV ? 0 : 0.20;
             const fbtValue = carCost * fbtRate;
 
             // Calculate running costs with GST
-            const runningCostsSubtotal = leasePayment + fuel + servicing + tyres + registration + insurance + management + roadside;
+            const runningCostsOnly = fuel + servicing + tyres + registration + insurance + management + roadside;
+            const runningCostsSubtotal = leasePayment + runningCostsOnly;
             const gstOnCosts = runningCostsSubtotal * 0.10;
             const totalRunningCosts = runningCostsSubtotal * 1.10;
 
@@ -1284,6 +1695,8 @@
             const gstSavings = gstInputCredit;
 
             // Update display - cost breakdown
+            document.getElementById('runningCostsOnly').textContent = formatCurrency(runningCostsOnly);
+            document.getElementById('leasePaymentDisplay').textContent = formatCurrency(leasePayment);
             document.getElementById('subtotalCosts').textContent = formatCurrency(runningCostsSubtotal);
             document.getElementById('gstAmount').textContent = formatCurrency(gstOnCosts);
             document.getElementById('totalRunningCosts').textContent = formatCurrency(totalRunningCosts);
@@ -1355,6 +1768,68 @@
                 savingsBreakdown.classList.add('negative');
             } else {
                 savingsBreakdown.classList.remove('negative');
+            }
+            
+            // Update finance comparison - Total Cost of Ownership over term
+            const runningCostsExLease = fuel + servicing + tyres + registration + insurance + management + roadside;
+            const runningCostsExLeaseWithGST = runningCostsExLease * 1.10;
+            
+            // Calculate years for each option
+            const leaseYears = leaseTerm / 12;
+            const financeYears = financeTerm / 12;
+            
+            // Car Loan totals over term
+            const financeTotalRepayments = financeMonthlyPayment * financeTerm;
+            const financeTotalRunning = runningCostsExLeaseWithGST * financeYears;
+            const financeTotalOverTerm = financeTotalRepayments + financeTotalRunning + financeResidual;
+            
+            // Novated Lease totals over term
+            const novatedTotalPreTax = salarySacrificeAmount * leaseYears;
+            const novatedTotalPostTax = employeeContribution * leaseYears;
+            const novatedResidualPayment = residualValue * 1.1; // Residual inc GST
+            const novatedGrossCost = novatedTotalPreTax + novatedTotalPostTax + novatedResidualPayment;
+            const novatedTaxSavingsTotal = taxSavings * leaseYears;
+            const novatedGstSavingsTotal = gstSavings * leaseYears;
+            const novatedNetCost = novatedGrossCost - novatedTaxSavingsTotal - novatedGstSavingsTotal;
+            
+            // Total savings (comparing like-for-like using lease term)
+            const carLoanCostOverLeaseTerm = (financeMonthlyPayment * 12 + runningCostsExLeaseWithGST) * leaseYears + financeResidual;
+            const totalSavingsOverTerm = carLoanCostOverLeaseTerm - novatedNetCost;
+            
+            // Update display - Car Loan
+            document.getElementById('financeTermDisplay').textContent = financeTerm;
+            document.getElementById('financeTotalRepayments').textContent = formatCurrency(financeTotalRepayments);
+            document.getElementById('financeTotalRunning').textContent = formatCurrency(financeTotalRunning);
+            document.getElementById('financeBalloonDisplay').textContent = formatCurrency(financeResidual);
+            document.getElementById('financeTotalOverTerm').textContent = formatCurrency(financeTotalOverTerm);
+            
+            // Update display - Novated Lease
+            document.getElementById('leaseTermDisplay').textContent = leaseTerm;
+            document.getElementById('novatedTotalPreTax').textContent = formatCurrency(novatedTotalPreTax);
+            document.getElementById('novatedTotalPostTax').textContent = formatCurrency(novatedTotalPostTax);
+            document.getElementById('novatedResidualPayment').textContent = formatCurrency(novatedResidualPayment);
+            document.getElementById('novatedGrossCost').textContent = formatCurrency(novatedGrossCost);
+            document.getElementById('novatedTaxSavingsTotal').textContent = '−' + formatCurrency(novatedTaxSavingsTotal);
+            document.getElementById('novatedGstSavingsTotal').textContent = '−' + formatCurrency(novatedGstSavingsTotal);
+            document.getElementById('novatedNetCost').textContent = formatCurrency(novatedNetCost);
+            
+            // Update total savings - true comparison
+            const trueSavings = financeTotalOverTerm - novatedNetCost;
+            
+            document.getElementById('compareLoanTotal').textContent = formatCurrency(financeTotalOverTerm);
+            document.getElementById('compareLeaseTotal').textContent = formatCurrency(novatedNetCost);
+            document.getElementById('compareTotalSavings').textContent = formatCurrency(Math.abs(trueSavings));
+            
+            // Update label and styling based on whether novated lease saves money
+            const savingsSummary = document.getElementById('savingsSummary');
+            const savingsLabel = document.getElementById('savingsLabel');
+            
+            if (trueSavings >= 0) {
+                savingsLabel.textContent = 'You Save with Novated Lease';
+                savingsSummary.classList.remove('negative');
+            } else {
+                savingsLabel.textContent = 'You Pay Extra with Novated Lease';
+                savingsSummary.classList.add('negative');
             }
         }
 
