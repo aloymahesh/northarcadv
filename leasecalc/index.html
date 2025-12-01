@@ -254,6 +254,12 @@
             box-shadow: none;
         }
 
+        input[type="number"].highlight-input {
+            background: linear-gradient(135deg, var(--savings-bg) 0%, #9ae6b4 100%);
+            border-color: var(--accent);
+            color: var(--savings);
+        }
+
         .results-section {
             background: var(--surface-alt);
         }
@@ -1087,7 +1093,7 @@
     <div class="calculator-container">
         <header class="calculator-header">
             <h1>Novated Lease vs Car Loan Calculator</h1>
-            <p>Estimate your potential tax savings with salary packaging a vehicle through a novated lease versus a standard Car loan.</p>
+            <p>Estimate your potential tax savings with salary packaging a vehicle through a novated lease.</p>
         </header>
 
         <div class="calculator-card">
@@ -1181,6 +1187,13 @@
                         <div class="input-wrapper">
                             <span class="input-prefix">$</span>
                             <input type="number" id="leasePayment" value="0" min="0" step="100" readonly class="readonly-input">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="leaseTotalMonthly">Monthly Total (inc. Running Costs)</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="leaseTotalMonthly" value="0" min="0" step="10" readonly class="readonly-input highlight-input">
                         </div>
                     </div>
                 </div>
@@ -1653,6 +1666,10 @@
             const runningCostsSubtotal = leasePayment + runningCostsOnly;
             const gstOnCosts = runningCostsSubtotal * 0.10;
             const totalRunningCosts = runningCostsSubtotal * 1.10;
+            
+            // Calculate monthly total (lease + running costs) including GST
+            const leaseTotalMonthly = totalRunningCosts / 12;
+            document.getElementById('leaseTotalMonthly').value = Math.round(leaseTotalMonthly);
 
             // Calculate package breakdown
             // beCarWise methodology:
